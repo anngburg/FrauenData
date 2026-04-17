@@ -26,7 +26,7 @@ descr(Frauen_data_oK$Latenz_Wahrnehmung)
   descr(Frauen_data_oK$Latenz_Gesamt)
 
 
-MCxLatenz <- Frauen_data %>%
+  MCxLatenz <- Frauen_data %>%
   gather(key = "Hürde", value = "Ausgewählt", c(Hürden_alleineSchaffen:Hürden_Antriebslos, Hürden_DruckBeruf:Hürden_negErwartungen, Hürden_Scham:Hürden_Wartezeiten)) %>% 
   filter(Ausgewählt == 2) %>% 
   group_by(Hürde) %>% 
@@ -38,6 +38,36 @@ MCxLatenz <- Frauen_data %>%
             ) 
 
 write.xlsx(MCxLatenz, "MC x Latenz_Tabelle.xlsx")
+
+####### Hürden Offen X Latenz ######
+
+HüOffxLatenz <- Frauen_data %>%
+  gather(key = "Hürde", value = "Ausgewählt", c(Hü_offen_WartezeitTherapeut:Hü_offen_kA)) %>% 
+  filter(Ausgewählt == 1) %>% 
+  group_by(Hürde) %>% 
+  summarise(WL = str_c(round(mean(Latenz_Wahrnehmung, na.rm = TRUE), 2), " (", median(Latenz_Wahrnehmung, na.rm = TRUE), "; ", sum(!is.na(Latenz_Wahrnehmung)), ")"), 
+            PL = str_c(round(mean(Latenz_Problembewusst, na.rm = TRUE), 2)     , " (", median(Latenz_Problembewusst, na.rm = TRUE)     , "; ", sum(!is.na(Latenz_Problembewusst)), ")"), 
+            ÖL = str_c(round(mean(Latenz_Öffnung, na.rm = TRUE), 2)    , " (", median(Latenz_Öffnung, na.rm = TRUE)    , "; ", sum(!is.na(Latenz_Öffnung)), ")"), 
+            EL = str_c(round(mean(Latenz_Erkenntnis, na.rm = TRUE), 2)  , " (", median(Latenz_Erkenntnis, na.rm = TRUE)  , "; ", sum(!is.na(Latenz_Erkenntnis)), ")"), 
+            GL = str_c(round(mean(Latenz_Gesamt, na.rm = TRUE), 2)      , " (", median(Latenz_Gesamt, na.rm = TRUE)      , "; ", sum(!is.na(Latenz_Gesamt)), ")")
+  ) 
+
+write.xlsx(HüOffxLatenz, "HüOffxLatenz_Tabelle.xlsx")
+
+####### Unterstützung Offen X Latenz ######
+
+UntOffxLatenz <- Frauen_data %>%
+  gather(key = "Unterstützung", value = "Ausgewählt", c(Unt_offen_AnderePersonPriv:Unt_offen_kA)) %>% 
+  filter(Ausgewählt == 1) %>% 
+  group_by(Unterstützung) %>% 
+  summarise(WL = str_c(round(mean(Latenz_Wahrnehmung, na.rm = TRUE), 2), " (", median(Latenz_Wahrnehmung, na.rm = TRUE), "; ", sum(!is.na(Latenz_Wahrnehmung)), ")"), 
+            PL = str_c(round(mean(Latenz_Problembewusst, na.rm = TRUE), 2)     , " (", median(Latenz_Problembewusst, na.rm = TRUE)     , "; ", sum(!is.na(Latenz_Problembewusst)), ")"), 
+            ÖL = str_c(round(mean(Latenz_Öffnung, na.rm = TRUE), 2)    , " (", median(Latenz_Öffnung, na.rm = TRUE)    , "; ", sum(!is.na(Latenz_Öffnung)), ")"), 
+            EL = str_c(round(mean(Latenz_Erkenntnis, na.rm = TRUE), 2)  , " (", median(Latenz_Erkenntnis, na.rm = TRUE)  , "; ", sum(!is.na(Latenz_Erkenntnis)), ")"), 
+            GL = str_c(round(mean(Latenz_Gesamt, na.rm = TRUE), 2)      , " (", median(Latenz_Gesamt, na.rm = TRUE)      , "; ", sum(!is.na(Latenz_Gesamt)), ")")
+  ) 
+
+write.xlsx(UntOffxLatenz, "UntOffxLatenz_Tabelle.xlsx")
 ####### Grafiken #######
 
 library(ggbeeswarm)

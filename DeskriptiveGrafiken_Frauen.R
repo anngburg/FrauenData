@@ -101,3 +101,84 @@ facetPlot2 <- ggplot(data_long_all2, aes(x=as.factor(Kontakt), y=Value, color = 
 #print(facetPlot2)
 
 ggsave("FacetPlot2.svg", facetPlot2, width = 27, height = 45)
+
+######## BarPlots Erkenntnis ########
+
+Erkenntnis_data <- Frauen_data %>% select(Erkenntnis) 
+Erkenntnis_data$label <- Erkenntnis_data$Erkenntnis 
+Erkenntnis_data <- Erkenntnis_data %>% mutate(label = case_when(
+  label == 1 ~ "Ich hatte eigenständig\ndiese Erkenntnis",
+  label == 2 ~ "Mich hat eine Bezugsperson\ndarauf gebracht",
+  label == 3 ~ "Ich wurde von einer\nFachperson darauf gebracht",
+  label == 4 ~ "Durch Informationssuche",
+  is.na(label) ~ "Keine Angabe"
+)) %>%
+  mutate(label = factor(label, levels = c(
+    "Ich hatte eigenständig\ndiese Erkenntnis",
+    "Mich hat eine Bezugsperson\ndarauf gebracht",
+    "Ich wurde von einer\nFachperson darauf gebracht",
+    "Durch Informationssuche",
+    "Keine Angabe"
+  )))
+
+Erkenntnis_data$label <- fct_rev(Erkenntnis_data$label)
+
+Plot1_Erkenntnis <- ggplot(Erkenntnis_data, aes(y = label))+
+  geom_bar(color = "#a1d3ed", fill = "#a1d3ed")+
+  geom_text(stat  = "count",
+            aes(label = paste0(round((after_stat(count) / 179) * 100, 1), "%")),
+            hjust = 1, size = 7, color = "white") +
+  geom_text(stat='count', aes(label=..count..), hjust = -0.5, size=9, color = "grey30")+
+  theme_minimal()+
+  theme(plot.title = element_text(size = 34, hjust = 0.5, color = "grey20", face = "bold"),
+        axis.text.x = element_text(size = 30, color = "grey30"),
+        axis.text.y = element_text(size = 30, color = "grey30"),
+        axis.title.x = element_text(size = 30, color = "grey30")
+  )+
+  labs(title = "Erkenntnis des Hilfebedarfs", x = "Anzahl Nennungen", y = "")
+
+#print(Plot1_Erkenntnis)
+
+ggsave("Barplot_Erkenntnis.svg", Plot1_Erkenntnis, width = 25, height = 10)
+
+######## BarPlot Erstkontakt ########
+
+Erstkontakt_data <- Frauen_data %>% select(Erstkontakt) 
+Erstkontakt_data$label <- Erstkontakt_data$Erstkontakt 
+Erstkontakt_data <- Erstkontakt_data %>% mutate(label = case_when(
+  label == 1 ~ "ein Gespräch mit meinem Hausarzt/\nmeiner Hausärztin",
+  label == 2 ~ "ein Anruf bei der kassenärztlichen\nAuskunft 116-117",
+  label == 3 ~ "ein Anruf/eine Email an eine\npsychotherapeutisch/psychiatrische Praxis",
+  label == 4 ~ "andere Fachärzt:innen",
+  label == 5 ~ "Zwangseinweisung",
+  label == 6 ~ "Nicht zuordbar",
+  is.na(label) ~ "Keine Angabe"
+)) %>% mutate(label = factor(label, levels = c(
+  "ein Anruf/eine Email an eine\npsychotherapeutisch/psychiatrische Praxis",
+  "ein Gespräch mit meinem Hausarzt/\nmeiner Hausärztin",
+  "ein Anruf bei der kassenärztlichen\nAuskunft 116-117",
+  "andere Fachärzt:innen",
+  "Zwangseinweisung",
+  "Nicht zuordbar",
+    "Keine Angabe"
+  )))
+
+Erstkontakt_data$label <- fct_rev(Erstkontakt_data$label)
+
+Plot1_Erstkontakt <- ggplot(Erstkontakt_data, aes(y = label))+
+  geom_bar(color = "#a1d3ed", fill = "#a1d3ed")+
+  geom_text(stat  = "count",
+            aes(label = paste0(round((after_stat(count) / 179) * 100, 1), "%")),
+            hjust = 1, size = 7, color = "white") +
+  geom_text(stat='count', aes(label=..count..), hjust = -0.5, size=9, color = "grey30")+
+  theme_minimal()+
+  theme(plot.title = element_text(size = 34, hjust = 0.5, color = "grey20", face = "bold"),
+        axis.text.x = element_text(size = 30, color = "grey30"),
+        axis.text.y = element_text(size = 30, color = "grey30"),
+        axis.title.x = element_text(size = 30, color = "grey30")
+  )+
+  labs(title = "Erstkontakt ins Gesundheitssystem", x = "Anzahl Nennungen", y = "")
+
+#print(Plot1_Erkenntnis)
+
+ggsave("Barplot_Erstkontakt.svg", Plot1_Erstkontakt, width = 25, height = 10)
